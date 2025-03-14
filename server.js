@@ -29,13 +29,18 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post("/mpesa-callback", async (req, res) => {
+    console.log("🔹 Received M-Pesa Callback:", JSON.stringify(req.body, null, 2));
+
     try {
         const { Body } = req.body;
         if (!Body || !Body.stkCallback) {
+            console.error("❌ Invalid callback data");
             return res.status(400).json({ error: "Invalid callback data" });
         }
 
         const callbackData = Body.stkCallback;
+        console.log("✅ STK Callback Data:", callbackData);
+
         const merchantRequestID = callbackData.MerchantRequestID;
         const checkoutRequestID = callbackData.CheckoutRequestID;
         const resultCode = callbackData.ResultCode;
@@ -59,15 +64,17 @@ app.post("/mpesa-callback", async (req, res) => {
             });
         }
 
+        console.log("📌 Saving transaction to Firestore:", transaction);
         await db.collection("mpesaTransactions").doc(checkoutRequestID).set(transaction);
+        console.log("✅ Transaction saved successfully!");
 
-        console.log("Transaction saved:", transaction);
         res.status(200).json({ message: "Transaction saved successfully" });
     } catch (error) {
-        console.error("Error saving transaction:", error);
+        console.error("🚨 Error saving transaction:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
 
 app.listen(PORT, () => {
     console.log(`✅ Server running on http://localhost:${PORT}/mpesa-callback`);
