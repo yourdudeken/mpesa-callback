@@ -12,7 +12,6 @@ app.use(bodyParser.json());
 app.post('/mpesa-callback', (req, res) => {
     console.log('M-Pesa Callback Received:', req.body);
 
-    // Extract callback data
     const callbackData = req.body.Body?.stkCallback;
     
     if (!callbackData) {
@@ -20,10 +19,10 @@ app.post('/mpesa-callback', (req, res) => {
     }
 
     if (callbackData.ResultCode === 0) {
-        console.log('✅ Payment Successful:', callbackData);
-        // Save to database (if needed)
+        console.log('Payment Successful:', callbackData);
+      
     } else {
-        console.log('❌ Payment Failed:', callbackData.ResultDesc);
+        console.log('Payment Failed:', callbackData.ResultDesc);
     }
 
     res.status(200).json({ message: 'Callback received' });
