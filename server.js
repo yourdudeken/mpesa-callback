@@ -29,34 +29,25 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post("/mpesa-callback", async (req, res) => {
-    console.log("🔹 Received M-Pesa Callback:", JSON.stringify(req.body, null, 2));
-
     try {
         const { Body } = req.body;
-        if (!Body || !Body.stkCallback) {
-            console.error("❌ Invalid callback data");
+        if (!Body?.stkCallback) {
             return res.status(400).json({ error: "Invalid callback data" });
         }
 
         const callbackData = Body.stkCallback;
-        console.log("✅ STK Callback Data:", callbackData);
-
-        const merchantRequestID = callbackData.MerchantRequestID;
-        const checkoutRequestID = callbackData.CheckoutRequestID;
-        const resultCode = callbackData.ResultCode;
-        const resultDesc = callbackData.ResultDesc;
+        const { MerchantRequestID, CheckoutRequestID, ResultCode, ResultDesc, CallbackMetadata } = callbackData;
 
         let transaction = {
-            merchantRequestID,
-            checkoutRequestID,
-            resultCode,
-            resultDesc,
+            merchantRequestID: MerchantRequestID,
+            checkoutRequestID: CheckoutRequestID,
+            resultCode: ResultCode,
+            resultDesc: ResultDesc,
             timestamp: admin.firestore.Timestamp.now(),
         };
 
-        if (resultCode === 0) {
-            const items = callbackData.CallbackMetadata?.Item || [];
-            items.forEach((item) => {
+        if (ResultCode === 0) {
+            CallbackMetadata?.Item?.forEach((item) => {
                 if (item.Name === "Amount") transaction.amount = item.Value;
                 if (item.Name === "MpesaReceiptNumber") transaction.receiptNumber = item.Value;
                 if (item.Name === "TransactionDate") transaction.transactionDate = item.Value;
@@ -64,18 +55,12 @@ app.post("/mpesa-callback", async (req, res) => {
             });
         }
 
-        console.log("📌 Saving transaction to Firestore:", transaction);
-        await db.collection("mpesaTransactions").doc(checkoutRequestID).set(transaction);
-        console.log("✅ Transaction saved successfully!");
-
+        await db.collection("mpesaTransactions").doc(CheckoutRequestID).set(transaction);
         res.status(200).json({ message: "Transaction saved successfully" });
     } catch (error) {
-        console.error("🚨 Error saving transaction:", error);
+        console.error("🚨 Error processing M-Pesa callback:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 });
 
-
-app.listen(PORT, () => {
-    console.log(`✅ Server running on http://localhost:${PORT}/mpesa-callback`);
-});
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
