@@ -29,14 +29,18 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post("/mpesa-callback", async (req, res) => {
+    console.log("🚀 M-Pesa callback received", req.body);
     try {
         const { Body } = req.body;
         if (!Body?.stkCallback) {
+            console.error("❌ Invalid callback data: Missing stkCallback");
             return res.status(400).json({ error: "Invalid callback data" });
         }
 
         const callbackData = Body.stkCallback;
         const { MerchantRequestID, CheckoutRequestID, ResultCode, ResultDesc, CallbackMetadata } = callbackData;
+
+        console.log(`✅ Callback data: MerchantRequestID=${MerchantRequestID}, CheckoutRequestID=${CheckoutRequestID}, ResultCode=${ResultCode}`);
 
         let transaction = {
             merchantRequestID: MerchantRequestID,
@@ -47,6 +51,7 @@ app.post("/mpesa-callback", async (req, res) => {
         };
 
         if (ResultCode === 0) {
+            console.log("✅ Transaction successful, processing metadata...");
             CallbackMetadata?.Item?.forEach((item) => {
                 if (item.Name === "Amount") transaction.amount = item.Value;
                 if (item.Name === "MpesaReceiptNumber") transaction.receiptNumber = item.Value;
@@ -54,8 +59,13 @@ app.post("/mpesa-callback", async (req, res) => {
                 if (item.Name === "PhoneNumber") transaction.phoneNumber = item.Value;
             });
         }
+        else {
+            console.error(`❌ Transaction failed: ResultCode=${ResultCode}, ResultDesc=${ResultDesc}`);
+
+        }
 
         await db.collection("mpesaTransactions").doc(CheckoutRequestID).set(transaction);
+        console.log(`✅ Transaction saved to Firestore: CheckoutRequestID=${CheckoutRequestID}`);
         res.status(200).json({ message: "Transaction saved successfully" });
     } catch (error) {
         console.error("🚨 Error processing M-Pesa callback:", error);
