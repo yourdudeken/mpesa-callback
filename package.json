@@ -5,8 +5,15 @@
   "license": "ISC",
   "author": "Alex Nyambura",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "pm2-start": "pm2 start server.js --name mpesa-callback",
+    "pm2-stop": "pm2 stop mpesa-callback",
+    "pm2-restart": "pm2 restart mpesa-callback",
+    "pm2-status": "pm2 status",
+    "pm2-logs": "pm2 logs mpesa-callback",
+    "pm2-save": "pm2 save",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -15,5 +22,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "firebase-admin": "^13.2.0"
+  },
+  "devDependencies": {
+    "pm2": "^6.0.5"
   }
 }
