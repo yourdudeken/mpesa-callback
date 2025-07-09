@@ -5,3 +5,4 @@ serviceAccountKey.json
 firebase.json
 firestore.indexes.json
 firestore.rules
+.vscode/
