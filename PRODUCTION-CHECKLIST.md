@@ -60,10 +60,13 @@
 ## 🔧 Operational
 
 ### Deployment
-- [ ] Automated deployment scripts
+- [ ] Automated deployment scripts (PM2 or Docker)
 - [ ] Environment validation
 - [ ] Graceful shutdown handling
 - [ ] Zero-downtime deployment
+- [ ] Docker containers configured (if using Docker)
+- [ ] Container health checks enabled
+- [ ] Docker Compose production configuration
 
 ### Backup & Recovery
 - [ ] Firestore backup enabled
@@ -142,6 +145,8 @@
 - [ ] Monitor for first few hours
 - [ ] Verify real transactions processing
 - [ ] Alert team of successful deployment
+- [ ] Verify Docker containers are running (if using Docker)
+- [ ] Check container resource usage and limits
 
 ## 🆘 Emergency Procedures
 

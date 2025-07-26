@@ -21,7 +21,12 @@ cd ../my-project-name-mpesa-callback
 
 # 4. Install and deploy
 npm install
-./scripts/deploy.sh
+
+# Deploy with Docker (recommended)
+./scripts/deploy.sh docker
+
+# OR Deploy with PM2 (traditional)
+./scripts/deploy.sh pm2
 ```
 
 ### Option 2: Manual Configuration
@@ -236,6 +241,44 @@ npm run monitor
 
 # Restart specific project
 pm2 restart your-project-name
+```
+
+## 🐳 Docker Deployment Options
+
+### Quick Docker Deployment
+```bash
+# Development
+npm run docker:dev
+
+# Production
+npm run docker:prod
+
+# Custom deployment
+./scripts/docker-deploy.sh production
+```
+
+### Docker Benefits for Multi-Project
+- **Isolation**: Each project runs in its own container
+- **Consistency**: Same environment across dev/staging/production
+- **Scaling**: Easy horizontal scaling with Docker Swarm/Kubernetes
+- **Updates**: Zero-downtime deployments
+- **Monitoring**: Built-in health checks and metrics
+
+### VPS Docker Deployment
+```bash
+# On your VPS
+git clone https://github.com/yourusername/my-project-mpesa-callback.git
+cd my-project-mpesa-callback
+
+# Configure for production
+cp example.env .env
+nano .env  # Add production credentials
+
+# Deploy with Docker
+./scripts/docker-deploy.sh production
+
+# Monitor
+docker-compose logs -f mpesa-callback
 ```
 
 This reusable architecture allows you to deploy the same robust M-Pesa callback service across unlimited projects with minimal configuration changes!

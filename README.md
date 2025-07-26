@@ -6,7 +6,8 @@ A production-ready, **reusable** M-Pesa callback processing service built with N
 
 - **Project-agnostic**: Configure for any project via environment variables
 - **Flexible database**: Configurable Firestore collections
-- **Simple setup**: Easy configuration with example.env template
+- **Template-based**: Pre-configured templates for common use cases
+- **Docker & PM2 support**: Multiple deployment options
 - **One-click deployment**: Automated setup scripts
 - **Multi-environment**: Separate configs for dev/staging/production
 
@@ -29,16 +30,19 @@ A production-ready, **reusable** M-Pesa callback processing service built with N
 git clone https://github.com/lxmwaniky/mpesa-callback.git
 cd mpesa-callback
 
-# Set up for your project
-./scripts/setup-project.sh [my-project-name]
-cd ../[my-project-name-mpesa-callback]
-
-# Replace [my-project-name] with your project name
+# Set up for your project using a template
+./scripts/setup-project.sh my-ecommerce-store ecommerce-store
+cd ../my-ecommerce-store-mpesa-callback
 
 # Install dependencies and configure
 npm install
 # Edit .env with your credentials
-./scripts/deploy.sh
+
+# Deploy with PM2 (traditional)
+./scripts/deploy.sh pm2
+
+# OR Deploy with Docker (recommended)
+./scripts/deploy.sh docker
 ```
 
 ### Method 2: Manual Setup
@@ -52,6 +56,11 @@ cp example.env .env
 
 # Edit .env with your project details
 npm run dev
+
+# For production deployment
+npm run deploy:docker  # Docker deployment
+# OR
+npm run deploy:pm2     # PM2 deployment
 ```
 
 ### Prerequisites
@@ -59,6 +68,7 @@ npm run dev
 - Node.js 16+ 
 - Firebase project with Firestore enabled
 - M-Pesa developer account
+- Docker (optional, for containerized deployment)
 
 ### Environment Setup
 
@@ -92,6 +102,20 @@ npm run dev
 
 ### Production Deployment
 
+#### Option 1: Docker (Recommended)
+```bash
+# Development
+npm run docker:dev
+
+# Production
+npm run docker:prod
+
+# Manual Docker commands
+docker-compose up -d
+docker-compose logs -f mpesa-callback
+```
+
+#### Option 2: PM2 (Traditional)
 ```bash
 npm run pm2-start
 npm run pm2-save
@@ -272,12 +296,32 @@ Your callback endpoint is automatically configured at `/api/mpesa/callback`. To 
 
 ### Scripts
 
+#### Development
 ```bash
 npm run dev        # Start development server
 npm run start      # Start production server
+```
+
+#### PM2 Deployment
+```bash
 npm run pm2-start  # Start with PM2
 npm run pm2-stop   # Stop PM2 process
 npm run pm2-logs   # View PM2 logs
+npm run deploy:pm2 # Deploy with PM2
+```
+
+#### Docker Deployment
+```bash
+npm run docker:dev    # Docker development
+npm run docker:prod   # Docker production
+npm run deploy:docker # Deploy with Docker
+```
+
+#### General Deployment
+```bash
+npm run deploy        # Deploy with PM2 (default)
+npm run setup         # Make scripts executable
+npm run health        # Health check
 ```
 
 ### Adding New Features
@@ -298,8 +342,59 @@ ngrok http 5000
 
 ## Production Deployment
 
-### Process Management
+### Docker Deployment (Recommended)
 
+#### Local Development
+```bash
+# Start development environment
+npm run docker:dev
+
+# View logs
+docker-compose logs -f mpesa-callback
+
+# Stop containers
+docker-compose down
+```
+
+#### VPS Deployment
+```bash
+# On your VPS
+git clone https://github.com/yourusername/mpesa-callback.git
+cd mpesa-callback
+
+# Configure environment
+cp example.env .env
+nano .env  # Add your production credentials
+
+# Deploy with Docker
+./scripts/docker-deploy.sh production
+
+# Monitor
+docker-compose ps
+docker-compose logs -f mpesa-callback
+```
+
+#### Docker Commands
+```bash
+# Build and start
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f mpesa-callback
+
+# Restart services
+docker-compose restart
+
+# Stop all services
+docker-compose down
+
+# Monitor resources
+docker stats
+```
+
+### PM2 Deployment (Traditional)
+
+#### Process Management
 ```bash
 # Start with PM2
 npm run pm2-start
@@ -313,12 +408,22 @@ npm run pm2-save
 pm2 startup
 ```
 
-### Environment Setup
-
+#### Environment Setup
 1. Set `NODE_ENV=production`
 2. Configure proper logging level
 3. Set up monitoring and alerts
 4. Configure backup strategy for Firestore
+
+### Deployment Comparison
+
+| Feature | Docker | PM2 |
+|---------|--------|-----|
+| **Isolation** | ✅ Full container isolation | ❌ Shared system dependencies |
+| **Scaling** | ✅ Easy horizontal scaling | ✅ Cluster mode available |
+| **Updates** | ✅ Zero-downtime with containers | ✅ Graceful restarts |
+| **Monitoring** | ✅ Container health checks | ✅ Process monitoring |
+| **Setup** | ✅ Automated with scripts | ✅ Simple PM2 commands |
+| **Resource Usage** | ⚠️ Slightly higher overhead | ✅ Lower resource usage |
 
 ## Security Considerations
 
@@ -333,8 +438,11 @@ pm2 startup
 
 ### Health Endpoints
 
-- `GET /api/health` - Quick health check
-- `GET /api/mpesa/health` - Detailed service health
+- `GET /health` - Basic health check
+- `GET /ready` - Readiness check (includes dependencies)
+- `GET /metrics` - Application metrics
+- `GET /api/health` - Detailed service health
+- `GET /api/mpesa/health` - M-Pesa service health
 
 ### Logging
 
