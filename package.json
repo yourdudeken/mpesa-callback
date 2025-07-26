@@ -23,11 +23,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "health": "curl http://localhost:3000/api/health",
     "setup": "chmod +x scripts/*.sh",
-    "deploy": "./scripts/deploy.sh",
-    "deploy:docker": "./scripts/deploy.sh docker",
-    "deploy:pm2": "./scripts/deploy.sh pm2",
-    "docker:dev": "./scripts/docker-deploy.sh development",
-    "docker:prod": "./scripts/docker-deploy.sh production",
+    "deploy": "bash ./scripts/deploy.sh",
+    "deploy:docker": "bash ./scripts/deploy.sh docker",
+    "deploy:pm2": "bash ./scripts/deploy.sh pm2",
+    "deploy:docker:win": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy.ps1 docker",
+    "deploy:pm2:win": "powershell -ExecutionPolicy Bypass -File ./scripts/deploy.ps1 pm2",
+    "docker:dev": "bash ./scripts/docker-deploy.sh development",
+    "docker:prod": "bash ./scripts/docker-deploy.sh production",
     "new-project": "./scripts/setup-project.sh"
   },
   "dependencies": {
