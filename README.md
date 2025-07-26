@@ -34,7 +34,7 @@ cd mpesa-callback
 ./scripts/setup-project.sh my-project-name
 cd ../my-project-name
 
-#Replace 'my-project-name' with your project name
+# Replace 'my-project-name' with your project name
 
 # Install dependencies and configure
 npm install
