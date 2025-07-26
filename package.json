@@ -7,22 +7,35 @@
   "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "dev" : "nodemon server.js",
+    "dev": "nodemon server.js",
     "start": "node server.js",
-    "pm2-start": "pm2 start server.js --name mpesa-callback",
+    "prod": "NODE_ENV=production node server.js",
+    "pm2-start": "pm2 start ecosystem.config.js --env production",
+    "pm2-dev": "pm2 start ecosystem.config.js --env development",
     "pm2-stop": "pm2 stop mpesa-callback",
     "pm2-restart": "pm2 restart mpesa-callback",
     "pm2-status": "pm2 status",
     "pm2-logs": "pm2 logs mpesa-callback",
     "pm2-save": "pm2 save",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pm2-delete": "pm2 delete mpesa-callback",
+    "logs": "pm2 logs --lines 100",
+    "monitor": "pm2 monit",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "health": "curl http://localhost:3000/api/health",
+    "setup": "chmod +x scripts/*.sh",
+    "deploy": "./scripts/deploy.sh",
+    "new-project": "./scripts/setup-project.sh"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
+    "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "firebase-admin": "^13.2.0"
+    "express-rate-limit": "^7.1.5",
+    "firebase-admin": "^13.2.0",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9",

@@ -1,11 +1,12 @@
 const { getFirestore, getTimestamp } = require('../config/firebase');
+const config = require('../config/environment');
 
 class DatabaseService {
     constructor() {
         this.db = getFirestore();
         this.collections = {
-            transactions: 'mpesaTransactions',
-            logs: 'mpesaLogs'
+            transactions: config.database.transactionsCollection,
+            logs: config.database.logsCollection
         };
     }
 
@@ -80,13 +81,19 @@ class DatabaseService {
     }
 
     async logCallback(callbackData, status = 'received') {
+        // Skip logging if disabled
+        if (!config.database.enableLogging) {
+            return { success: true };
+        }
+        
         try {
             const logRef = this.db.collection(this.collections.logs);
             
             const logEntry = {
                 data: callbackData,
                 status,
-                timestamp: getTimestamp()
+                timestamp: getTimestamp(),
+                project: config.projectName || 'mpesa-callback'
             };
 
             await logRef.add(logEntry);

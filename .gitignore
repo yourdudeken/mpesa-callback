@@ -1,8 +1,42 @@
+# Environment files
 .env
-node_modules/
+.env.*
+!.env.example
+.env.local
+.env.production
+.env.staging
+.env.development
+
+# Sensitive files
+*-env-template.txt
+*-credentials.*
 serviceAccountKey.json
+firebase-key.json
+
+# Dependencies and build
+node_modules/
+dist/
+build/
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+
+# Firebase
 .firebaserc
 firebase.json
 firestore.indexes.json
 firestore.rules
+
+# System files
+.DS_Store
 .vscode/
+.idea/
+
+# Backup files
+*.backup.*
+
+# Keep templates directory
+!templates/

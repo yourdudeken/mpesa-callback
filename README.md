@@ -1,6 +1,14 @@
 # M-Pesa Callback Service
 
-A production-ready, modular M-Pesa callback processing service built with Node.js, Express, and Firebase. Designed for easy reuse across multiple projects with clean architecture and comprehensive logging.
+A production-ready, **reusable** M-Pesa callback processing service built with Node.js, Express, and Firebase. Designed for easy deployment across multiple projects with just environment variable changes.
+
+## 🚀 Reusability Features
+
+- **Project-agnostic**: Configure for any project via environment variables
+- **Flexible database**: Configurable Firestore collections
+- **Template-based**: Pre-configured templates for common use cases
+- **One-click deployment**: Automated setup scripts
+- **Multi-environment**: Separate configs for dev/staging/production
 
 ## Features
 
@@ -13,21 +21,44 @@ A production-ready, modular M-Pesa callback processing service built with Node.j
 - **Graceful shutdown** handling
 - **Modular architecture** for easy reuse
 
-## Quick Start
+## 🚀 Quick Start for New Projects
+
+### Method 1: Use Setup Script (Recommended)
+```bash
+# Clone the repository
+git clone https://github.com/lxmwaniky/mpesa-callback.git
+cd mpesa-callback
+
+# Set up for your project using a template
+./scripts/setup-project.sh my-ecommerce-store ecommerce-store
+cd ../my-ecommerce-store-mpesa-callback
+
+# Install dependencies and configure
+npm install
+# Edit .env with your credentials
+./scripts/deploy.sh
+```
+
+### Method 2: Manual Setup
+```bash
+git clone https://github.com/lxmwaniky/mpesa-callback.git
+cd mpesa-callback
+npm install
+
+# Copy a template or use default
+cp templates/ecommerce-store.env .env
+# OR
+cp .env.example .env
+
+# Edit .env with your project details
+npm run dev
+```
 
 ### Prerequisites
 
 - Node.js 16+ 
 - Firebase project with Firestore enabled
-- M-Pesa developer account (optional, for testing)
-
-### Installation
-
-```bash
-git clone https://github.com/lxmwaniky/mpesa-callback.git
-cd mpesa-callback
-npm install
-```
+- M-Pesa developer account
 
 ### Environment Setup
 
@@ -42,11 +73,15 @@ Edit `.env` with your configuration:
 PORT=5000
 NODE_ENV=development
 
-# Firebase - Get from Firebase Console > Project Settings > Service Accounts
-FIREBASE_PROJECT_ID=your-project-id
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY\n-----END PRIVATE KEY-----\n"
-FIREBASE_CLIENT_EMAIL=your-service-account@project.iam.gserviceaccount.com
-# ... other Firebase fields
+# Firebase - Option 1: Base64 encoded service account (Recommended)
+FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64=your-base64-encoded-service-account-json
+
+# M-Pesa
+MPESA_CONSUMER_KEY=your-consumer-key
+MPESA_CONSUMER_SECRET=your-consumer-secret
+MPESA_PASSKEY=your-passkey
+MPESA_SHORTCODE=your-shortcode
+MPESA_ENVIRONMENT=sandbox
 ```
 
 ### Start Development
@@ -141,10 +176,49 @@ mpesa-callback/
 
 ### Firebase Setup
 
-1. Create a Firebase project
-2. Enable Firestore
-3. Generate a service account key
-4. Add the key details to `.env`
+1. **Create a Firebase project** at https://console.firebase.google.com
+2. **Enable Firestore** in Database section
+3. **Generate a service account key**:
+   - Go to Project Settings → Service Accounts
+   - Click "Generate new private key"
+   - Download the JSON file
+4. **Configure Firebase in .env**:
+   
+   **Option 1 (Recommended): Base64 encode the entire JSON file**
+   ```bash
+   # On Linux/Mac
+   base64 -i path/to/serviceAccountKey.json
+   
+   # On Windows
+   certutil -encode path/to/serviceAccountKey.json temp.txt && findstr /v /c:- temp.txt
+   ```
+   Then add to `.env`:
+   ```env
+   FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64=eyJ0eXBlIjoic2VydmljZV9hY2NvdW50...
+   ```
+   
+   **Option 2: Individual fields** (uncomment in .env.example and fill values from JSON)
+
+### M-Pesa Callback URL Configuration
+
+Your callback endpoint is automatically configured at `/api/mpesa/callback`. To set this up:
+
+1. **For local testing**: Use ngrok to expose your local server
+   ```bash
+   ngrok http 5000
+   # Use the HTTPS URL: https://abc123.ngrok.io/api/mpesa/callback
+   ```
+
+2. **For production**: Use your domain with HTTPS
+   ```
+   https://yourdomain.com/api/mpesa/callback
+   ```
+
+3. **Configure in M-Pesa Dashboard**:
+   - Login to Safaricom Developer Portal
+   - Go to your app settings
+   - Set the callback URL to your endpoint
+   - Ensure the URL is publicly accessible and uses HTTPS
 
 ### Environment Variables
 
@@ -152,10 +226,17 @@ mpesa-callback/
 |----------|-------------|----------|
 | `PORT` | Server port | No (default: 5000) |
 | `NODE_ENV` | Environment | No (default: development) |
-| `LOG_LEVEL` | Log level (error/warn/info/debug) | No (default: info) |
-| `FIREBASE_PROJECT_ID` | Firebase project ID | Yes |
-| `FIREBASE_PRIVATE_KEY` | Service account private key | Yes |
-| `FIREBASE_CLIENT_EMAIL` | Service account email | Yes |
+| `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` | Base64 encoded service account JSON | Yes* |
+| `FIREBASE_PROJECT_ID` | Firebase project ID | Yes* |
+| `FIREBASE_PRIVATE_KEY` | Service account private key | Yes* |
+| `FIREBASE_CLIENT_EMAIL` | Service account email | Yes* |
+| `MPESA_CONSUMER_KEY` | M-Pesa consumer key | No |
+| `MPESA_CONSUMER_SECRET` | M-Pesa consumer secret | No |
+| `MPESA_PASSKEY` | M-Pesa passkey | No |
+| `MPESA_SHORTCODE` | M-Pesa shortcode | No |
+| `MPESA_ENVIRONMENT` | M-Pesa environment (sandbox/production) | No |
+
+*Either use `FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64` OR the individual Firebase fields
 
 ## Database Schema
 
