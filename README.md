@@ -392,6 +392,25 @@ docker-compose down
 docker stats
 ```
 
+#### Docker Hub Publishing
+```bash
+# 1. Build your image
+./scripts/deploy.sh docker
+
+# 2. Login to Docker Hub
+docker login
+
+# 3. Tag for Docker Hub
+docker tag mpesa-callback:latest yourusername/mpesa-callback:latest
+
+# 4. Push to Docker Hub
+docker push yourusername/mpesa-callback:latest
+
+# 5. Deploy on VPS from Docker Hub
+docker pull yourusername/mpesa-callback:latest
+docker run -d --name mpesa-callback --env-file .env -p 3000:3000 yourusername/mpesa-callback:latest
+```
+
 ### PM2 Deployment (Traditional)
 
 #### Process Management

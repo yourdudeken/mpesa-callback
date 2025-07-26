@@ -265,6 +265,8 @@ npm run docker:prod
 - **Monitoring**: Built-in health checks and metrics
 
 ### VPS Docker Deployment
+
+#### Option 1: Git-based (Recommended)
 ```bash
 # On your VPS
 git clone https://github.com/yourusername/my-project-mpesa-callback.git
@@ -279,6 +281,17 @@ nano .env  # Add production credentials
 
 # Monitor
 docker-compose logs -f mpesa-callback
+```
+
+#### Option 2: Docker Hub
+```bash
+# Publish locally
+docker tag mpesa-callback:latest yourusername/mpesa-callback:latest
+docker push yourusername/mpesa-callback:latest
+
+# Deploy on VPS
+docker pull yourusername/mpesa-callback:latest
+docker run -d --name mpesa-callback --env-file .env -p 3000:3000 yourusername/mpesa-callback:latest
 ```
 
 This reusable architecture allows you to deploy the same robust M-Pesa callback service across unlimited projects with minimal configuration changes!
