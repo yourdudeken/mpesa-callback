@@ -24,6 +24,10 @@
     "health": "curl http://localhost:3000/api/health",
     "setup": "chmod +x scripts/*.sh",
     "deploy": "./scripts/deploy.sh",
+    "deploy:docker": "./scripts/deploy.sh docker",
+    "deploy:pm2": "./scripts/deploy.sh pm2",
+    "docker:dev": "./scripts/docker-deploy.sh development",
+    "docker:prod": "./scripts/docker-deploy.sh production",
     "new-project": "./scripts/setup-project.sh"
   },
   "dependencies": {

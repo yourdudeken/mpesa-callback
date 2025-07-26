@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mpesa-callback:
+    environment:
+      - NODE_ENV=production
+      - LOG_LEVEL=warn
+    restart: always
+    
+  nginx:
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/certbot:/var/www/certbot:ro
+    ports:
+      - "80:80"
+      - "443:443"
