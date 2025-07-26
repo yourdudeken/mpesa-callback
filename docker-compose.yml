@@ -3,6 +3,7 @@
 services:
   mpesa-callback:
     build: .
+    image: mpesa-callback:latest
     ports:
       - "3000:3000"
     environment:
