@@ -50,7 +50,7 @@ if [ "$TEMPLATE" != "default" ] && [ -f "templates/$TEMPLATE.env" ]; then
     sed -i "s/PROJECT_NAME=.*/PROJECT_NAME=$PROJECT_NAME-mpesa-callback/" .env
 else
     echo "📋 Using default template"
-    cp .env.example .env
+    cp example.env .env
     sed -i "s/PROJECT_NAME=.*/PROJECT_NAME=$PROJECT_NAME-mpesa-callback/" .env
 fi
 

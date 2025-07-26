@@ -48,7 +48,7 @@ npm install
 # Copy a template or use default
 cp templates/ecommerce-store.env .env
 # OR
-cp .env.example .env
+cp example.env .env
 
 # Edit .env with your project details
 npm run dev
@@ -63,7 +63,7 @@ npm run dev
 ### Environment Setup
 
 ```bash
-cp .env.example .env
+cp example.env .env
 ```
 
 Edit `.env` with your configuration:
@@ -169,7 +169,7 @@ mpesa-callback/
 │       └── helpers.js         # Utility functions
 ├── server.js                  # Application entry point
 ├── package.json
-└── .env.example
+└── example.env
 ```
 
 ## Configuration
@@ -197,7 +197,7 @@ mpesa-callback/
    FIREBASE_ADMIN_SERVICE_ACCOUNT_BASE64=eyJ0eXBlIjoic2VydmljZV9hY2NvdW50...
    ```
    
-   **Option 2: Individual fields** (uncomment in .env.example and fill values from JSON)
+   **Option 2: Individual fields** (uncomment in example.env and fill values from JSON)
 
 ### M-Pesa Callback URL Configuration
 

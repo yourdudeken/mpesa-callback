@@ -64,7 +64,7 @@ MPESA_ENVIRONMENT=sandbox
 npm install
 
 # Copy environment file
-cp .env.example .env
+cp example.env .env
 
 # Edit .env with your values
 # Then start the server

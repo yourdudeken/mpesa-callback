@@ -27,9 +27,9 @@ if [ "$PROJECT_TEMPLATE" != "default" ] && [ -f "templates/$PROJECT_TEMPLATE.env
         ${EDITOR:-nano} .env
     fi
 else
-    echo "📋 Using existing .env file or .env.example"
+    echo "📋 Using existing .env file or example.env"
     if [ ! -f ".env" ]; then
-        cp .env.example .env
+        cp example.env .env
         echo "⚠️  Please update the .env file with your actual credentials"
         exit 1
     fi

@@ -1,7 +1,7 @@
 # Environment files
 .env
 .env.*
-!.env.example
+!example.env
 .env.local
 .env.production
 .env.staging

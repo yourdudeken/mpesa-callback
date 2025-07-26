@@ -29,9 +29,9 @@ if ($ProjectTemplate -ne "default" -and (Test-Path "templates\$ProjectTemplate.e
         notepad .env
     }
 } else {
-    Write-Host "📋 Using existing .env file or .env.example" -ForegroundColor Blue
+    Write-Host "📋 Using existing .env file or example.env" -ForegroundColor Blue
     if (-not (Test-Path ".env")) {
-        Copy-Item ".env.example" ".env"
+        Copy-Item "example.env" ".env"
         Write-Host "⚠️  Please update the .env file with your actual credentials" -ForegroundColor Yellow
         exit 1
     }

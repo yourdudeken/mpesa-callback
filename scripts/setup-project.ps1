@@ -77,7 +77,7 @@ if ($Template -ne "default" -and (Test-Path "templates\$Template.env")) {
     (Get-Content $envFile) -replace "PROJECT_NAME=.*", "PROJECT_NAME=$ProjectName-mpesa-callback" | Set-Content $envFile
 } else {
     Write-Host "📋 Using default template" -ForegroundColor Blue
-    Copy-Item ".env.example" $envFile
+    Copy-Item "example.env" $envFile
     (Get-Content $envFile) -replace "PROJECT_NAME=.*", "PROJECT_NAME=$ProjectName-mpesa-callback" | Set-Content $envFile
 }
 

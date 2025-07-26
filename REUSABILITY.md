@@ -35,7 +35,7 @@ npm install
 # 2. Choose a template or create custom .env
 cp templates/saas-platform.env .env
 # OR
-cp .env.example .env
+cp example.env .env
 
 # 3. Update .env with your project details
 # 4. Deploy
