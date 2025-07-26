@@ -1,16 +1,15 @@
 #!/bin/bash
 
 # M-Pesa Callback Service Project Setup Script
-# Usage: ./scripts/setup-project.sh <project-name> [template]
+# Usage: ./scripts/setup-project.sh <project-name>
 
 set -e
 
 PROJECT_NAME=${1}
-TEMPLATE=${2:-"default"}
 
 if [ -z "$PROJECT_NAME" ]; then
-    echo "❌ Usage: ./scripts/setup-project.sh <project-name> [template]"
-    echo "📋 Available templates: ecommerce-store, saas-platform, mobile-app"
+    echo "❌ Usage: ./scripts/setup-project.sh <project-name>"
+    echo "� Example: ./scripts/setup-project.sh my-ecommerce-store"
     exit 1
 fi
 
@@ -41,18 +40,10 @@ fi
 # Navigate to project directory
 cd "$PROJECT_DIR"
 
-# Use template if specified
-if [ "$TEMPLATE" != "default" ] && [ -f "templates/$TEMPLATE.env" ]; then
-    echo "📋 Using template: $TEMPLATE"
-    cp "templates/$TEMPLATE.env" .env
-    
-    # Update PROJECT_NAME in .env
-    sed -i "s/PROJECT_NAME=.*/PROJECT_NAME=$PROJECT_NAME-mpesa-callback/" .env
-else
-    echo "📋 Using default template"
-    cp example.env .env
-    sed -i "s/PROJECT_NAME=.*/PROJECT_NAME=$PROJECT_NAME-mpesa-callback/" .env
-fi
+# Copy example.env and update project name
+echo "📋 Setting up environment configuration"
+cp example.env .env
+sed -i "s/PROJECT_NAME=.*/PROJECT_NAME=$PROJECT_NAME-mpesa-callback/" .env
 
 # Create logs directory
 mkdir -p logs

@@ -1,14 +1,13 @@
 #!/bin/bash
 
 # M-Pesa Callback Service Deployment Script
-# Usage: ./scripts/deploy.sh [project-template]
+# Usage: ./scripts/deploy.sh
 
 set -e
 
-PROJECT_TEMPLATE=${1:-"default"}
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
-echo "🚀 Starting deployment for: $PROJECT_TEMPLATE"
+echo "🚀 Starting deployment"
 
 # Create backup of current .env if it exists
 if [ -f ".env" ]; then
@@ -16,10 +15,10 @@ if [ -f ".env" ]; then
     cp .env .env.backup.$TIMESTAMP
 fi
 
-# Copy template if specified
-if [ "$PROJECT_TEMPLATE" != "default" ] && [ -f "templates/$PROJECT_TEMPLATE.env" ]; then
-    echo "📋 Using template: templates/$PROJECT_TEMPLATE.env"
-    cp "templates/$PROJECT_TEMPLATE.env" .env
+# Check if .env exists, if not copy from example.env
+if [ ! -f ".env" ]; then
+    echo "📋 Creating .env from example.env"
+    cp example.env .env
     echo "⚠️  Please update the .env file with your actual credentials before continuing"
     echo "📝 Edit .env file now? (y/n)"
     read -r edit_env
@@ -27,7 +26,7 @@ if [ "$PROJECT_TEMPLATE" != "default" ] && [ -f "templates/$PROJECT_TEMPLATE.env
         ${EDITOR:-nano} .env
     fi
 else
-    echo "📋 Using existing .env file or example.env"
+    echo "📋 Using existing .env file"
     if [ ! -f ".env" ]; then
         cp example.env .env
         echo "⚠️  Please update the .env file with your actual credentials"

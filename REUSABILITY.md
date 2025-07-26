@@ -32,9 +32,7 @@ git clone https://github.com/lxmwaniky/mpesa-callback.git
 cd mpesa-callback
 npm install
 
-# 2. Choose a template or create custom .env
-cp templates/saas-platform.env .env
-# OR
+# 2. Create your .env file
 cp example.env .env
 
 # 3. Update .env with your project details
@@ -42,30 +40,7 @@ cp example.env .env
 npm run deploy
 ```
 
-## 📋 Available Templates
-
-### E-commerce Store (`ecommerce-store.env`)
-
-- **Use case**: Online stores, marketplaces
-- **Collections**: `storePayments`, `paymentLogs`
-- **Rate limits**: Higher limits for customer transactions
-- **Features**: Order tracking, payment verification
-
-### SaaS Platform (`saas-platform.env`)
-
-- **Use case**: Subscription services, SaaS billing
-- **Collections**: `subscriptionPayments`, `billingLogs`
-- **Rate limits**: Moderate limits for recurring payments
-- **Features**: Subscription management, billing cycles
-
-### Mobile App (`mobile-app.env`)
-
-- **Use case**: Mobile apps, in-app purchases
-- **Collections**: `appPurchases`, `purchaseLogs`
-- **Rate limits**: High limits for mobile transactions
-- **Features**: In-app purchase tracking, user payments
-
-## 🔧 Configuration Variables
+##  Configuration Variables
 
 ### Project Identity
 
@@ -225,7 +200,7 @@ docker run -d --env-file .env -p 3001:3000 fashion-store-mpesa
 ## 📝 Checklist for New Project
 
 - [ ] Clone repository
-- [ ] Choose appropriate template
+- [ ] Copy example.env to .env
 - [ ] Update PROJECT_NAME and description
 - [ ] Configure Firebase service account
 - [ ] Set up M-Pesa credentials

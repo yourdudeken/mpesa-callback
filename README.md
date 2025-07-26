@@ -6,7 +6,7 @@ A production-ready, **reusable** M-Pesa callback processing service built with N
 
 - **Project-agnostic**: Configure for any project via environment variables
 - **Flexible database**: Configurable Firestore collections
-- **Template-based**: Pre-configured templates for common use cases
+- **Simple setup**: Easy configuration with example.env template
 - **One-click deployment**: Automated setup scripts
 - **Multi-environment**: Separate configs for dev/staging/production
 
@@ -29,8 +29,8 @@ A production-ready, **reusable** M-Pesa callback processing service built with N
 git clone https://github.com/lxmwaniky/mpesa-callback.git
 cd mpesa-callback
 
-# Set up for your project using a template
-./scripts/setup-project.sh my-ecommerce-store ecommerce-store
+# Set up for your project
+./scripts/setup-project.sh my-ecommerce-store
 cd ../my-ecommerce-store-mpesa-callback
 
 # Install dependencies and configure
@@ -45,9 +45,7 @@ git clone https://github.com/lxmwaniky/mpesa-callback.git
 cd mpesa-callback
 npm install
 
-# Copy a template or use default
-cp templates/ecommerce-store.env .env
-# OR
+# Copy environment file
 cp example.env .env
 
 # Edit .env with your project details

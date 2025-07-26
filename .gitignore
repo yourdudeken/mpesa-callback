@@ -37,6 +37,3 @@ firestore.rules
 
 # Backup files
 *.backup.*
-
-# Keep templates directory
-!templates/

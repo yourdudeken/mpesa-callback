@@ -1,16 +1,11 @@
 # M-Pesa Callback Service Deployment Script (PowerShell)
-# Usage: .\scripts\deploy.ps1 [project-template]
-
-param(
-    [Parameter(Mandatory=$false)]
-    [string]$ProjectTemplate = "default"
-)
+# Usage: .\scripts\deploy.ps1
 
 $ErrorActionPreference = "Stop"
 
 $Timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
-Write-Host "🚀 Starting deployment for: $ProjectTemplate" -ForegroundColor Green
+Write-Host "🚀 Starting deployment" -ForegroundColor Green
 
 # Create backup of current .env if it exists
 if (Test-Path ".env") {
@@ -18,16 +13,18 @@ if (Test-Path ".env") {
     Copy-Item ".env" ".env.backup.$Timestamp"
 }
 
-# Copy template if specified
-if ($ProjectTemplate -ne "default" -and (Test-Path "templates\$ProjectTemplate.env")) {
-    Write-Host "📋 Using template: templates\$ProjectTemplate.env" -ForegroundColor Blue
-    Copy-Item "templates\$ProjectTemplate.env" ".env"
+# Check if .env exists, if not copy from example.env
+if (-not (Test-Path ".env")) {
+    Write-Host "📋 Creating .env from example.env" -ForegroundColor Blue
+    Copy-Item "example.env" ".env"
     Write-Host "⚠️  Please update the .env file with your actual credentials before continuing" -ForegroundColor Yellow
     Write-Host "📝 Edit .env file now? (y/n)" -ForegroundColor Yellow
     $editEnv = Read-Host
     if ($editEnv -eq "y") {
         notepad .env
     }
+} else {
+    Write-Host "📋 Using existing .env file" -ForegroundColor Blue
 } else {
     Write-Host "📋 Using existing .env file or example.env" -ForegroundColor Blue
     if (-not (Test-Path ".env")) {

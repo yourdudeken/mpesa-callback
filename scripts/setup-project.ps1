@@ -1,19 +1,16 @@
 # M-Pesa Callback Service Project Setup Script (PowerShell)
-# Usage: .\scripts\setup-project.ps1 <project-name> [template]
+# Usage: .\scripts\setup-project.ps1 <project-name>
 
 param(
     [Parameter(Mandatory=$true)]
-    [string]$ProjectName,
-    
-    [Parameter(Mandatory=$false)]
-    [string]$Template = "default"
+    [string]$ProjectName
 )
 
 $ErrorActionPreference = "Stop"
 
 if (-not $ProjectName) {
-    Write-Host "❌ Usage: .\scripts\setup-project.ps1 <project-name> [template]" -ForegroundColor Red
-    Write-Host "📋 Available templates: ecommerce-store, saas-platform, mobile-app" -ForegroundColor Yellow
+    Write-Host "❌ Usage: .\scripts\setup-project.ps1 <project-name>" -ForegroundColor Red
+    Write-Host "� Example: .\scripts\setup-project.ps1 my-ecommerce-store" -ForegroundColor Yellow
     exit 1
 }
 
@@ -67,19 +64,11 @@ Get-ChildItem -Path . -Recurse | Where-Object {
 # Navigate to project directory
 Set-Location $ProjectDir
 
-# Use template if specified
+# Copy example.env and update project name
 $envFile = ".env"
-if ($Template -ne "default" -and (Test-Path "templates\$Template.env")) {
-    Write-Host "📋 Using template: $Template" -ForegroundColor Blue
-    Copy-Item "templates\$Template.env" $envFile
-    
-    # Update PROJECT_NAME in .env
-    (Get-Content $envFile) -replace "PROJECT_NAME=.*", "PROJECT_NAME=$ProjectName-mpesa-callback" | Set-Content $envFile
-} else {
-    Write-Host "📋 Using default template" -ForegroundColor Blue
-    Copy-Item "example.env" $envFile
-    (Get-Content $envFile) -replace "PROJECT_NAME=.*", "PROJECT_NAME=$ProjectName-mpesa-callback" | Set-Content $envFile
-}
+Write-Host "📋 Setting up environment configuration" -ForegroundColor Blue
+Copy-Item "example.env" $envFile
+(Get-Content $envFile) -replace "PROJECT_NAME=.*", "PROJECT_NAME=$ProjectName-mpesa-callback" | Set-Content $envFile
 
 # Create logs directory
 New-Item -ItemType Directory -Path "logs" -Force | Out-Null
