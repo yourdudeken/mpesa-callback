@@ -31,8 +31,10 @@ git clone https://github.com/lxmwaniky/mpesa-callback.git
 cd mpesa-callback
 
 # Set up for your project using a template
-./scripts/setup-project.sh my-ecommerce-store ecommerce-store
-cd ../my-ecommerce-store-mpesa-callback
+./scripts/setup-project.sh my-project-name
+cd ../my-project-name
+
+#Replace 'my-project-name' with your project name
 
 # Install dependencies and configure
 npm install
